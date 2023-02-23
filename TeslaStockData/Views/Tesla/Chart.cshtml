@@ -1,0 +1,114 @@
+﻿@*<h2>working fine but now able to display</h2>
+    <input type="number" id="abc" />
+    <button onclick="myFunc()">Get chart</button>
+    <div Style="font-family: Corbel; font-size: small ;text-align:center " class="row">
+        <div style="  width:100%; height: 100%">
+            <canvas id="chart" style="padding: 0;margin: auto;display: block; "> </canvas>
+        </div>
+    </div>*@
+
+<div class=" mt-4" id="chart">
+</div>
+
+@*<div Style="font-family: Corbel; font-size: small ;text-align:center " class="row">
+    <div style="   width:100%; height: 100%">
+        <canvas id="myChart" style="padding: 0; margin: auto; display: block;; width: 100%; height: 200px "> </canvas>
+    </div>
+</div>*@
+
+<script>
+
+    $.ajax({
+        type: "Get",
+        url: "NewChart",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        
+        success: function (response) {
+            debugger;
+            var dataOfTesla;
+            console.log(response);
+            dataOfTesla = response;
+            var dates = [];
+            var Open = [];
+            var High = [];
+            var Low = [];
+            var Close = [];
+
+            for (let i = 0; i < dataOfTesla.length; i++) {
+                var d = new Date(parseInt(dataOfTesla[i].Date.substr(6)));
+                d = d.toLocaleDateString();
+                dates.push(d);
+                Open.push(dataOfTesla[i].Open);
+                High.push(dataOfTesla[i].High);
+                Low.push(dataOfTesla[i].Low);
+                Close.push(dataOfTesla[i].Close);
+            }
+            var myData = [];
+
+
+            for (let i = 0; i < dataOfTesla.length; i++) {
+
+                var obj = {
+                    x: dates[i],
+                    y: [Open[i], High[i], Low[i], Close[i]]
+                }
+
+                myData.push(obj);
+
+            }
+            debugger;
+            var options = {
+                series: [{
+                    data: myData
+                }],
+                chart: {
+                    type: 'candlestick',
+                    height: 600
+                },
+                title: {
+                    text: 'Tesla Stock 2021',
+                    align: 'center'
+                },
+                xaxis: {
+                    type: 'datetime'
+                },
+                yaxis: {
+                    tooltip: {
+                        enabled: true
+                    }
+
+                },
+                plotOptions: {
+                    candlestick: {
+                        colors: {
+                            upward: '#3C90EB',
+                            downward: '#DF7D46'
+                        }
+                    }
+                },
+            };
+
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+
+            var ctx = document.getElementById("myChart").getContext("2d");
+
+            var mychart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [
+                        {
+                            data: Open,
+                            label: "Open",
+                            backgroundColor: "#5f9ea0",
+                            borderColor: "#084de0",
+                        }
+                    ],
+
+                },
+            });
+        }
+    });
+</script>
