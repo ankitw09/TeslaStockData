@@ -13,8 +13,7 @@ namespace TeslaStockData
         {
             var container = new UnityContainer();
 
-            string connectionString = ConfigurationManager.ConnectionStrings["demo"].ToString();
-            //container.RegisterType<TeslaRepo>(str => new TeslaRepo(connectionString);
+            string connectionString = ConfigurationManager.ConnectionStrings["TeslaStockConnection"].ToString();
            
             container.RegisterType<ITeslaRepo, TeslaRepo>(new InjectionConstructor(connectionString));
 

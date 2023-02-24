@@ -17,7 +17,7 @@ namespace TeslaUnitTest
         [TestMethod]
         public void GetStockData()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["demo"].ToString();
+            string connectionString = ConfigurationManager.ConnectionStrings["TeslaStockConnection"].ToString();
             var mockDatabase = new Mock<ITeslaRepo>();
             var Repo = new TeslaRepo(connectionString);
             int expectedResult = 13;
@@ -30,7 +30,7 @@ namespace TeslaUnitTest
         [TestMethod]
         public void AddStockData()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["demo"].ToString();
+            string connectionString = ConfigurationManager.ConnectionStrings["TeslaStockConnection"].ToString();
             var mockDatabase = new Mock<ITeslaRepo>();
             var Repo = new TeslaRepo(connectionString);
             bool expectedResult = true;
@@ -38,7 +38,7 @@ namespace TeslaUnitTest
             TeslaModel data = new TeslaModel
             {
                 Id = 12,
-                Date = DateTime.Now,
+                Date = DateTime.Now.AddMinutes(2),
                 Open = 255,
                 High = 255,
                 Low = 257,
@@ -50,27 +50,25 @@ namespace TeslaUnitTest
             };
 
             var result = Repo.AddStockData(data);
+            bool res = false;
+            if (result > 0)
+                res = Repo.DeleteStockData(result);
 
-            if (result)
-                result = Repo.DeleteStockData(2485);
-
-
-
-            Assert.AreEqual(expectedResult, result);
+            Assert.AreEqual(expectedResult, res);
 
 
         }
         [TestMethod]
         public void UpdateStockData()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["demo"].ToString();
+            string connectionString = ConfigurationManager.ConnectionStrings["TeslaStockConnection"].ToString();
             var mockDatabase = new Mock<ITeslaRepo>();
             var Repo = new TeslaRepo(connectionString);
             bool expectedResult = true;
 
             TeslaModel data = new TeslaModel
             {
-                Id = 3243,
+                Id = 2,
                 Date = DateTime.Now,
                 Open = 444,
                 High = 444,

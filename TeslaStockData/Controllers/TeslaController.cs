@@ -42,7 +42,7 @@ namespace TeslaStockData.Controllers
                 {
        
 
-                    if (teslaRepo.AddStockData(teslaModel))
+                    if (teslaRepo.AddStockData(teslaModel) > 0)
                     {
                         ViewBag.Message = "Stock data added successfully";
                     }

@@ -8,7 +8,7 @@ namespace TeslaStockData.Repository
 {
     public interface ITeslaRepo
     {
-         bool AddStockData(TeslaModel obj);
+         int AddStockData(TeslaModel obj);
          List<TeslaModel> GetStockData(int currentPageIndex);
          bool UpdateStockData(TeslaModel obj);
 

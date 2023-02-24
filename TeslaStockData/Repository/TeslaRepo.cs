@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -26,9 +28,10 @@ namespace TeslaStockData.Repository
             con = new SqlConnection(connectionString);
         }
 
-        public bool AddStockData(TeslaModel obj)
+        public int AddStockData(TeslaModel obj)
         {
             connection();
+
             SqlCommand com = new SqlCommand("AddStockData", con);
             com.CommandType = CommandType.StoredProcedure;
             com.Parameters.AddWithValue("@Date", obj.Date);
@@ -38,11 +41,13 @@ namespace TeslaStockData.Repository
             com.Parameters.AddWithValue("@Close", obj.Close);
             com.Parameters.AddWithValue("@Adj_Close", obj.Adj_Price);
             com.Parameters.AddWithValue("@Volume", obj.Volume);
+            SqlParameter outputparam = com.Parameters.Add("@Id", SqlDbType.Int);
+            outputparam.Direction = ParameterDirection.Output;
 
             con.Open();
             int i = com.ExecuteNonQuery();
             con.Close();
-           bool res = i >= 1 ? true: false;
+            int res =  (int)outputparam.Value;
 
             return res;
         }
@@ -63,7 +68,7 @@ namespace TeslaStockData.Repository
             da.Fill(dt);
             con.Close();
             int totalRecords = Convert.ToInt32(dt.Tables[1].Rows[0]["totalRecords"]) / 15 + 1;
-            
+
             foreach (DataRow dr in dt.Tables[0].Rows)
             {
 
@@ -84,11 +89,11 @@ namespace TeslaStockData.Repository
                     }
 
 
-                    ) ;
+                    );
 
 
             }
-        
+
             return StockData;
 
 

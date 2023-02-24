@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace TeslaStockData.Models
 {
-    public class TeslaModel
+    public class TeslaModel : TableEntity
     {
         public int Id { get; set; }
         [DataType(DataType.Date)]
