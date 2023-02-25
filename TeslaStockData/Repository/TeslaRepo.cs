@@ -52,6 +52,34 @@ namespace TeslaStockData.Repository
             return res;
         }
 
+        public TeslaModel GetStockDatabyId(int id)
+        {
+            connection();
+            SqlCommand com = new SqlCommand("select  * from Tesla where Id = @id", con);
+            com.Parameters.AddWithValue("@id", id);
+            con.Open();
+            SqlDataReader rdr = com.ExecuteReader();
+            TeslaModel stockData = new TeslaModel();
+            while (rdr.Read())
+            {
+
+                stockData = new TeslaModel()
+                {
+                    Id = Convert.ToInt32(rdr["Id"]),
+                    Date = Convert.ToDateTime(rdr["Date"]),
+                    Open = Convert.ToSingle(rdr["Open"]),
+                    High = Convert.ToSingle(rdr["High"]),
+                    Low = Convert.ToSingle(rdr["Low"]),
+                    Close = Convert.ToSingle(rdr["Close"]),
+                    Adj_Price = Convert.ToSingle(rdr["Adj.Close"]),
+                    Volume = Convert.ToInt32(rdr["Volume"]),
+                };
+         }
+            con.Close();
+
+            return stockData;
+        }
+
 
         public List<TeslaModel> GetStockData(int currentPageIndex)
         {
@@ -67,7 +95,7 @@ namespace TeslaStockData.Repository
             con.Open();
             da.Fill(dt);
             con.Close();
-            int totalRecords = Convert.ToInt32(dt.Tables[1].Rows[0]["totalRecords"]) / 15 + 1;
+            int totalRecords = Convert.ToInt32(dt.Tables[1].Rows[0]["totalRecords"]) / 13 + 1;
 
             foreach (DataRow dr in dt.Tables[0].Rows)
             {

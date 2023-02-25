@@ -13,5 +13,6 @@ namespace TeslaStockData.Repository
          bool UpdateStockData(TeslaModel obj);
 
         bool DeleteStockData(int Id);
+        TeslaModel GetStockDatabyId(int id);
     }
 }

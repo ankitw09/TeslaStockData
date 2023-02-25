@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Web;
@@ -75,10 +78,10 @@ namespace TeslaStockData.Controllers
 
         public ActionResult EditStockData(int id)
         {
-            
 
-            return View(teslaRepo.GetStockData(1).Find(data => data.Id == id));
 
+            //return View(teslaRepo.GetStockDatabyId(1).Find(data => data.Id == id));
+            return View(teslaRepo.GetStockDatabyId(id));
         }
 
         [HttpPost]
@@ -96,6 +99,27 @@ namespace TeslaStockData.Controllers
                 Console.WriteLine(ex);
                 return View();
             }
+        }
+
+        [HttpGet]
+        public string PushMsgOnAzureQueue()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["QueueConnection"].ToString();
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+
+          
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+
+          
+            CloudQueue queue = queueClient.GetQueueReference("teslaqueue");
+
+            
+            CloudQueueMessage message = new CloudQueueMessage("messaget to trigger queue ");
+            queue.AddMessage(message);
+
+
+
+            return "message successfully posted on azure queue";
         }
       
    
